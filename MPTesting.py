@@ -53,7 +53,7 @@ while cv2.waitKey(1) != 27:
     frame.flags.writeable = True
     frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 
-    pose_landmarks = results.pose_world_landmarks
+    pose_landmarks = results.pose_landmarks
 
     if pose_landmarks is not None:
       # Get landmarks into np array
@@ -65,8 +65,8 @@ while cv2.waitKey(1) != 27:
     landmarks = np.copy(pose_landmarks)
     
     if landmarks.shape == (33, 3):
-        #check if hit depth based on rightHip and rightKnee:
 
+        #check if hit depth based on rightHip and rightKnee:
         if landmarks[rightHipIndex].shape == (3,) and landmarks[rightKneeIndex].shape == (3,):    
         #for i in range(len(landmarks)):
         #print(i, landmarks[i])
@@ -82,27 +82,27 @@ while cv2.waitKey(1) != 27:
 
             #back angle
             yDistBack = landmarks[rightShoulderIndex][1] - landmarks[rightHipIndex][1]
-            xDistBack = landmarks[rightShoulderIndex][0] - landmarks[rightHipIndex][0]
+            xDistBack = landmarks[rightHipIndex][0] - landmarks[rightShoulderIndex][0]
             angleBack = round(math.degrees(math.atan(xDistBack/yDistBack)))
             #print(angleBack)
             #if angle > 60 and uprightAngle:
                 
             #draw back angle on the frame at the hip
-            hipPos = np.array(landmarks[rightHipIndex][0], landmarks[rightHipIndex][1])
-            hipVerticalLineEnd = np.array(landmarks[rightHipIndex][0], landmarks[rightHipIndex][1] + 5)
-            cv2.line(frame, tuple(hipPos), tuple(hipVerticalLineEnd), (255, 0, 0), 2)
-            cv2.putText(frame, str(angleBack), tuple(hipPos), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2, cv2.LINE_AA)
+            hipPos = np.array([landmarks[rightHipIndex][0], landmarks[rightHipIndex][1]])
+            hipVerticalLineEnd = np.array([landmarks[rightHipIndex][0], landmarks[rightHipIndex][1] - 150])
+            cv2.line(frame, tuple(hipPos.astype(int)), tuple(hipVerticalLineEnd.astype(int)), (255, 0, 0), 8)
+            cv2.putText(frame, str(angleBack), tuple(hipPos.astype(int)), cv2.FONT_HERSHEY_SIMPLEX, 2.5, (255, 0, 0), 5, cv2.LINE_AA)
 
         #check upper leg angle (dist from parallel to ground) based on right hip and right knee:
         if landmarks[rightHipIndex].shape == (3,) and landmarks[rightKneeIndex].shape == (3,):
             yDistUpperLeg = landmarks[rightHipIndex][1] - landmarks[rightKneeIndex][1]
-            xDistUpperLeg = landmarks[rightKneeIndex][0] - landmarks[rightHipIndex][0]
+            xDistUpperLeg = landmarks[rightHipIndex][0] - landmarks[rightKneeIndex][0]
             angleUpperLeg = round(math.degrees(math.atan(yDistUpperLeg/xDistUpperLeg)))
 
-            kneePos = np.array(landmarks[rightKneeIndex][0], landmarks[rightKneeIndex][1])
-            kneeHorizontalLineEnd = np.array(landmarks[rightKneeIndex][0] - 5, landmarks[rightKneeIndex][1])
-            cv2.line(frame, tuple(kneePos), tuple(kneeHorizontalLineEnd), (255, 0, 0), 2)
-            cv2.putText(frame, str(angleUpperLeg), tuple(kneePos), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2, cv2.LINE_AA)
+            kneePos = np.array([landmarks[rightKneeIndex][0], landmarks[rightKneeIndex][1]])
+            kneeHorizontalLineEnd = np.array([landmarks[rightKneeIndex][0] + 150, landmarks[rightKneeIndex][1]])
+            cv2.line(frame, tuple(kneePos.astype(int)), tuple(kneeHorizontalLineEnd.astype(int)), (255, 0, 0), 8)
+            cv2.putText(frame, str(angleUpperLeg), tuple(kneePos.astype(int)), cv2.FONT_HERSHEY_SIMPLEX, 2.5, (255, 0, 0), 5, cv2.LINE_AA)
 
             #state transition diagram for wht position of the squat you are in
             if angleUpperLeg > 70:
@@ -129,13 +129,13 @@ while cv2.waitKey(1) != 27:
         #check lower leg angle (forward tilt) based on right ankle and right knee:
         if landmarks[rightAnkleIndex].shape == (3,) and landmarks[rightKneeIndex].shape == (3,):
             yDistLowerLeg = landmarks[rightKneeIndex][1] - landmarks[rightAnkleIndex][1]
-            xDistLowerLeg = landmarks[rightShoulderIndex][0] - landmarks[rightHipIndex][0]
+            xDistLowerLeg = landmarks[rightHipIndex][0] - landmarks[rightShoulderIndex][0]
             angleLowerLeg = round(math.degrees(math.atan(xDistLowerLeg/yDistLowerLeg)))
 
-            anklePos = np.array(landmarks[rightAnkleIndex][0], landmarks[rightAnkleIndex][1])
-            ankleVerticalLineEnd = np.array(landmarks[rightAnkleIndex][0], landmarks[rightAnkleIndex][1] + 5)
-            cv2.line(frame, tuple(anklePos), tuple(ankleVerticalLineEnd), (255, 0, 0), 2)
-            cv2.putText(frame, str(angleLowerLeg), tuple(anklePos), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2, cv2.LINE_AA)
+            anklePos = np.array([landmarks[rightAnkleIndex][0], landmarks[rightAnkleIndex][1]])
+            ankleVerticalLineEnd = np.array([landmarks[rightAnkleIndex][0], landmarks[rightAnkleIndex][1] - 150])
+            cv2.line(frame, tuple(anklePos.astype(int)), tuple(ankleVerticalLineEnd.astype(int)), (255, 0, 0), 8)
+            cv2.putText(frame, str(angleLowerLeg), tuple(anklePos.astype(int)), cv2.FONT_HERSHEY_SIMPLEX, 2.5, (255, 0, 0), 5, cv2.LINE_AA)
        
 
 
