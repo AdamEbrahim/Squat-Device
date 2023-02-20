@@ -49,12 +49,12 @@ repIssues = [] #list to hold all issues during a rep, prints after the rep
 #print summary of squat after each rep
 def squatSummary():
     if goodRep:
-        print("Summary of Rep #" + (repCounter + incompleteCounter) + " (Complete Rep):")
+        print("Summary of Rep #" + str(repCounter + incompleteCounter) + " (Complete Rep):")
     else:
-        print("Summary of Rep #" + (repCounter + incompleteCounter) + " (Incomplete rep):")
+        print("Summary of Rep #" + str(repCounter + incompleteCounter) + " (Incomplete rep):")
 
     for i in range(len(repIssues)):
-        print("    " + "Issue #" + (i+1) + ": " + repIssues[i])
+        print("    " + "Issue #" + str(i+1) + ": " + repIssues[i])
     repIssues.clear()
 
 currentSquatState = 0 #0 = at top position, 1 = descent, 2 = at bottom, 3 = ascent
