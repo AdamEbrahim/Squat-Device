@@ -40,7 +40,12 @@ rightKneeIndex = landmark_names.index('right_knee')
 rightShoulderIndex = landmark_names.index('right_shoulder')
 rightAnkleIndex = landmark_names.index('right_ankle')
 
+repCounter = 0
+incompleteCounter = 0
+goodRep = True
+
 currentSquatState = 0 #0 = at top position, 1 = descent, 2 = at bottom, 3 = ascent
+currentSquatStateText = "Top Position"
 while cv2.waitKey(1) != 27:
     has_frame, frame = cam.read()
     if has_frame != True:
@@ -90,8 +95,8 @@ while cv2.waitKey(1) != 27:
             #draw back angle on the frame at the hip
             hipPos = np.array([landmarks[rightHipIndex][0], landmarks[rightHipIndex][1]])
             hipVerticalLineEnd = np.array([landmarks[rightHipIndex][0], landmarks[rightHipIndex][1] - 150])
-            cv2.line(frame, tuple(hipPos.astype(int)), tuple(hipVerticalLineEnd.astype(int)), (255, 0, 0), 8)
-            cv2.putText(frame, str(angleBack), tuple(hipPos.astype(int)), cv2.FONT_HERSHEY_SIMPLEX, 2.5, (255, 0, 0), 5, cv2.LINE_AA)
+            cv2.line(frame, tuple(hipPos.astype(int)), tuple(hipVerticalLineEnd.astype(int)), (223, 244, 16), 8)
+            cv2.putText(frame, str(angleBack), tuple(hipPos.astype(int)), cv2.FONT_HERSHEY_SIMPLEX, 2.5, (223, 244, 16), 5, cv2.LINE_AA)
 
         #check upper leg angle (dist from parallel to ground) based on right hip and right knee:
         if landmarks[rightHipIndex].shape == (3,) and landmarks[rightKneeIndex].shape == (3,):
@@ -101,29 +106,52 @@ while cv2.waitKey(1) != 27:
 
             kneePos = np.array([landmarks[rightKneeIndex][0], landmarks[rightKneeIndex][1]])
             kneeHorizontalLineEnd = np.array([landmarks[rightKneeIndex][0] + 150, landmarks[rightKneeIndex][1]])
-            cv2.line(frame, tuple(kneePos.astype(int)), tuple(kneeHorizontalLineEnd.astype(int)), (255, 0, 0), 8)
-            cv2.putText(frame, str(angleUpperLeg), tuple(kneePos.astype(int)), cv2.FONT_HERSHEY_SIMPLEX, 2.5, (255, 0, 0), 5, cv2.LINE_AA)
+            cv2.line(frame, tuple(kneePos.astype(int)), tuple(kneeHorizontalLineEnd.astype(int)), (223, 244, 16), 8)
+            cv2.putText(frame, str(angleUpperLeg), tuple(kneePos.astype(int)), cv2.FONT_HERSHEY_SIMPLEX, 2.5, (223, 244, 16), 5, cv2.LINE_AA)
+            
 
             #state transition diagram for wht position of the squat you are in
             if angleUpperLeg > 70:
                 if currentSquatState == 0:
-                    print("still in top position of squat")
+                    print("top position of squat")
                 elif currentSquatState == 3:
                     print("Completed rep")
+                    if goodRep:
+                        repCounter = repCounter + 1
+                    else:
+                        incompleteCounter = incompleteCounter + 1
+                        goodRep = True
                     currentSquatState = 0
+                    currentSquatStateText = "Top Position"
+                else:
+                    print("Incomplete squat")
+                    incompleteCounter = incompleteCounter + 1
+                    currentSquatState = 0
+                    currentSquatStateText = "Top Position"
+
             elif angleUpperLeg > 15: 
                 if currentSquatState == 0:
                     print("descending")
                     currentSquatState = 1
+                    currentSquatStateText = "Descending"
                 elif currentSquatState == 2:
                     print("ascending")
                     currentSquatState = 3
-            elif angleUpperLeg > -5:
+                    currentSquatStateText = "Ascending"
+
+            else:
                 if currentSquatState == 1:
                     print("hit parallel")
                     currentSquatState = 2
-            else:
-                print("deeper than parallel")
+                    currentSquatStateText = "Bottom Position"
+                elif currentSquatState == 3:
+                    print("Failed rep")
+                    currentSquatStateText = "Failed Rep"
+                    currentSquatState = 2
+                    goodRep = False
+
+            #Show current squat state on screen
+            cv2.putText(frame, currentSquatStateText, (20, 60), cv2.FONT_HERSHEY_SIMPLEX, 2.5, (223, 244, 16), 6, cv2.LINE_AA)
 
 
         #check lower leg angle (forward tilt) based on right ankle and right knee:
@@ -134,8 +162,8 @@ while cv2.waitKey(1) != 27:
 
             anklePos = np.array([landmarks[rightAnkleIndex][0], landmarks[rightAnkleIndex][1]])
             ankleVerticalLineEnd = np.array([landmarks[rightAnkleIndex][0], landmarks[rightAnkleIndex][1] - 150])
-            cv2.line(frame, tuple(anklePos.astype(int)), tuple(ankleVerticalLineEnd.astype(int)), (255, 0, 0), 8)
-            cv2.putText(frame, str(angleLowerLeg), tuple(anklePos.astype(int)), cv2.FONT_HERSHEY_SIMPLEX, 2.5, (255, 0, 0), 5, cv2.LINE_AA)
+            cv2.line(frame, tuple(anklePos.astype(int)), tuple(ankleVerticalLineEnd.astype(int)), (223, 244, 16), 8)
+            cv2.putText(frame, str(angleLowerLeg), tuple(anklePos.astype(int)), cv2.FONT_HERSHEY_SIMPLEX, 2.5, (223, 244, 16), 5, cv2.LINE_AA)
        
 
 
@@ -161,7 +189,7 @@ while cv2.waitKey(1) != 27:
 
 
 
-    cv2.imshow(windowName, cv2.flip(frame, 1))
+    cv2.imshow(windowName, frame)
 
 
 
