@@ -44,6 +44,19 @@ repCounter = 0
 incompleteCounter = 0
 goodRep = True
 
+repIssues = [] #list to hold all issues during a rep, prints after the rep
+
+#print summary of squat after each rep
+def squatSummary():
+    if goodRep:
+        print("Summary of Rep #" + (repCounter + incompleteCounter) + " (Complete Rep):")
+    else:
+        print("Summary of Rep #" + (repCounter + incompleteCounter) + " (Incomplete rep):")
+
+    for i in range(len(repIssues)):
+        print("    " + "Issue #" + (i+1) + ": " + repIssues[i])
+    repIssues.clear()
+
 currentSquatState = 0 #0 = at top position, 1 = descent, 2 = at bottom, 3 = ascent
 currentSquatStateText = "Top Position"
 while cv2.waitKey(1) != 27:
@@ -57,6 +70,11 @@ while cv2.waitKey(1) != 27:
 
     frame.flags.writeable = True
     frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+
+    #display correct and incorrect rep counters
+    cv2.putText(frame, "Complete reps: " + str(repCounter), (900, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (223, 244, 16), 6, cv2.LINE_AA)
+    cv2.putText(frame, "Incomplete reps: " + str(incompleteCounter), (900, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (223, 244, 16), 6, cv2.LINE_AA)
+
 
     pose_landmarks = results.pose_landmarks
 
@@ -89,8 +107,10 @@ while cv2.waitKey(1) != 27:
             yDistBack = landmarks[rightShoulderIndex][1] - landmarks[rightHipIndex][1]
             xDistBack = landmarks[rightHipIndex][0] - landmarks[rightShoulderIndex][0]
             angleBack = round(math.degrees(math.atan(xDistBack/yDistBack)))
-            #print(angleBack)
-            #if angle > 60 and uprightAngle:
+
+            #back angle issue #1: too much forward lean
+            if angleBack > 45:
+                repIssues.append("Excessive forward lean")
                 
             #draw back angle on the frame at the hip
             hipPos = np.array([landmarks[rightHipIndex][0], landmarks[rightHipIndex][1]])
@@ -118,14 +138,22 @@ while cv2.waitKey(1) != 27:
                     print("Completed rep")
                     if goodRep:
                         repCounter = repCounter + 1
+                        squatSummary()
                     else:
+                        repIssues.append("Failed rep")
                         incompleteCounter = incompleteCounter + 1
+                        squatSummary()
                         goodRep = True
                     currentSquatState = 0
                     currentSquatStateText = "Top Position"
                 else:
                     print("Incomplete squat")
+                    repIssues.append("Improper depth")
+                    goodRep = False
                     incompleteCounter = incompleteCounter + 1
+                    squatSummary()
+
+                    goodRep = True
                     currentSquatState = 0
                     currentSquatStateText = "Top Position"
 
@@ -151,7 +179,7 @@ while cv2.waitKey(1) != 27:
                     goodRep = False
 
             #Show current squat state on screen
-            cv2.putText(frame, currentSquatStateText, (20, 60), cv2.FONT_HERSHEY_SIMPLEX, 2.5, (223, 244, 16), 6, cv2.LINE_AA)
+            cv2.putText(frame, currentSquatStateText, (20, 60), cv2.FONT_HERSHEY_SIMPLEX, 2, (223, 244, 16), 6, cv2.LINE_AA)
 
 
         #check lower leg angle (forward tilt) based on right ankle and right knee:
@@ -165,7 +193,6 @@ while cv2.waitKey(1) != 27:
             cv2.line(frame, tuple(anklePos.astype(int)), tuple(ankleVerticalLineEnd.astype(int)), (223, 244, 16), 8)
             cv2.putText(frame, str(angleLowerLeg), tuple(anklePos.astype(int)), cv2.FONT_HERSHEY_SIMPLEX, 2.5, (223, 244, 16), 5, cv2.LINE_AA)
        
-
 
     drawLimbs.draw_landmarks(
         frame,
