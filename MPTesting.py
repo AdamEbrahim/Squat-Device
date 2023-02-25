@@ -60,6 +60,10 @@ endBottomTime = time.time()
 hasCalculatedBottomStart = False
 hasCalculatedBottomEnd = False
 
+bottomHolds = True
+bottomHoldTime = 3
+hasCompletedBottomHold = False
+
 #Current squat state variables
 currentSquatState = 0 #0 = at top position, 1 = descent, 2 = at bottom, 3 = ascent
 currentSquatStateText = "Top Position"
@@ -72,7 +76,7 @@ currentSquatStateText = "Top Position"
 #Resetting many squat variables (per rep state)
 def resetVariables(repIssues):
     #globals
-    global hasCalculatedAscentStart, hasCalculatedAscentEnd, hasCalculatedBottomStart, hasCalculatedBottomEnd, forwardLeanAdded
+    global hasCalculatedAscentStart, hasCalculatedAscentEnd, hasCalculatedBottomStart, hasCalculatedBottomEnd, hasCompletedBottomHold, forwardLeanAdded
 
     #reset list of current rep issues
     repIssues.clear()
@@ -81,6 +85,7 @@ def resetVariables(repIssues):
     hasCalculatedAscentEnd = False
     hasCalculatedBottomStart = False
     hasCalculatedBottomEnd = False
+    hasCompletedBottomHold = False
 
     #reset issue added booleans
     forwardLeanAdded = False
@@ -102,6 +107,13 @@ def squatSummary(repIssues):
     #print time at bottom only if start and end time calculated
     if hasCalculatedBottomStart and hasCalculatedBottomEnd:
         print("    Time at bottom: " + str(endBottomTime - startBottomTime) + " seconds")
+
+    #if user wanted to hold bottom position, print whether successful or not
+    if bottomHolds:
+        if hasCompletedBottomHold:
+            print("    Successfully held bottom position for " + str(bottomHoldTime) + " seconds")
+        else:
+            print("    Failed to hold bottom position for " + str(bottomHoldTime) + " seconds")
 
     print("    Issues:")
     for i in range(len(repIssues)):
@@ -128,6 +140,15 @@ def calcBottomEnd():
 
     endBottomTime = time.time()
     hasCalculatedBottomEnd = True
+
+#function to check if person has held bottom position for input length of time and then do something once they have
+def checkHasCompletedBottomHold():
+    #globals
+    global hasCompletedBottomHold
+
+    if time.time() - startBottomTime >= bottomHoldTime:
+        print("You have completed the hold")
+        hasCompletedBottomHold = True
 
 #----------------------------------------------#
 
@@ -214,6 +235,10 @@ def squatStateTransitions(angleUpperLeg, frame, repIssues):
             currentSquatStateText = "Ascending"
 
     else:
+        #If bottomHolds true, only in bottom position do you need to continue checking if has completed bottom hold
+        if bottomHolds and hasCalculatedBottomStart and not hasCalculatedBottomEnd and not hasCompletedBottomHold:
+            checkHasCompletedBottomHold()
+
         if currentSquatState == 1:
             if not hasCalculatedBottomStart:
                 calcBottomStart()
