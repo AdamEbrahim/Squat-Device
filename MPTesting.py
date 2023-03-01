@@ -3,6 +3,7 @@ import math as math
 import mediapipe as mp
 import cv2
 import time
+from collections import deque
 
 #--GLOBAL VARIABLES--#
 
@@ -53,6 +54,13 @@ hasCalculatedAscentStart = False
 hasCalculatedAscentEnd = False
 startedDescent = False
 prevHipHeight = 10000
+ascentQ = deque() #queue to hold last 4 "transitions" between frames with regards to ascent or descent. 1 means ascent, 0 means descent
+ascentQ.append(0) #initialize to start with all descents. 0 = descent, 1 = ascent.
+ascentQ.append(0)
+ascentQ.append(0)
+ascentQ.append(0)
+ascentQTotal = 0 #hold total of ascent queue, once equal to 3 we know ascent started (3 of 4 last frames = ascent)
+
 
 #Variables for time in bottom position
 startBottomTime = time.time()
@@ -76,7 +84,7 @@ currentSquatStateText = "Top Position"
 #Resetting many squat variables (per rep state)
 def resetVariables(repIssues):
     #globals
-    global hasCalculatedAscentStart, hasCalculatedAscentEnd, hasCalculatedBottomStart, hasCalculatedBottomEnd, hasCompletedBottomHold, forwardLeanAdded
+    global hasCalculatedAscentStart, hasCalculatedAscentEnd, hasCalculatedBottomStart, hasCalculatedBottomEnd, hasCompletedBottomHold, forwardLeanAdded, ascentQ, ascentQTotal
 
     #reset list of current rep issues
     repIssues.clear()
@@ -86,6 +94,14 @@ def resetVariables(repIssues):
     hasCalculatedBottomStart = False
     hasCalculatedBottomEnd = False
     hasCompletedBottomHold = False
+
+    #reset queue and variables used to determine when we start ascending. 
+    ascentQ.clear()
+    ascentQ.append(0) 
+    ascentQ.append(0)
+    ascentQ.append(0)
+    ascentQ.append(0)
+    ascentQTotal = 0 #hold total of ascent queue, once equal to 3 we know ascent started
 
     #reset issue added booleans
     forwardLeanAdded = False
@@ -158,13 +174,20 @@ def checkHasCompletedBottomHold():
 #function to check for when we start ascent
 def checkForAscent(rightHipHeight):
     #globals
-    global prevHipHeight, hasCalculatedAscentStart, startAscentTime
+    global prevHipHeight, hasCalculatedAscentStart, startAscentTime, ascentQTotal, ascentQ
 
-    #calculate ascent start time
+    #calculate ascent start time based on if our hip height has been found to be increasing for at least 3 of 4 last frames. Queue
     if rightHipHeight > prevHipHeight and not hasCalculatedAscentStart:
-        startAscentTime = time.time()
-        hasCalculatedAscentStart = True
+        ascentQ.append(1)
+        ascentQTotal = ascentQTotal - ascentQ.popleft() + 1
+        if ascentQTotal == 3:
+            startAscentTime = time.time()
+            hasCalculatedAscentStart = True
+        else:
+            prevHipHeight = rightHipHeight
     elif not hasCalculatedAscentStart:
+        ascentQ.append(0)
+        ascentQTotal = ascentQTotal - ascentQ.popleft()
         prevHipHeight = rightHipHeight
 
 #Function to calculate end ascent time even if improper depth
