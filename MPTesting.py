@@ -76,6 +76,11 @@ hasCompletedBottomHold = False
 currentSquatState = 0 #0 = at top position, 1 = descent, 2 = at bottom, 3 = ascent
 currentSquatStateText = "Top Position"
 
+#Adjustable time before analysis starts occurring (allows for proper setup, and for the model to adjust to person)
+setupTime = 5
+hasPassedSetupTime = False
+programStartTime = time.time()
+
 #--------------------#
 
 
@@ -179,7 +184,7 @@ def checkForAscent(rightHipHeight):
     #calculate ascent start time based on if our hip height has been found to be increasing for at least 3 of 4 last frames. Queue
     if rightHipHeight > prevHipHeight and not hasCalculatedAscentStart:
         ascentQ.append(1)
-        ascentQTotal = ascentQTotal - ascentQ.popleft() + 1
+        ascentQTotal = ascentQTotal - ascentQ.popleft() + 1 #maintain queue total
         if ascentQTotal == 3:
             startAscentTime = time.time()
             hasCalculatedAscentStart = True
@@ -187,7 +192,7 @@ def checkForAscent(rightHipHeight):
             prevHipHeight = rightHipHeight
     elif not hasCalculatedAscentStart:
         ascentQ.append(0)
-        ascentQTotal = ascentQTotal - ascentQ.popleft()
+        ascentQTotal = ascentQTotal - ascentQ.popleft() #maintain queue total
         prevHipHeight = rightHipHeight
 
 #Function to calculate end ascent time even if improper depth
@@ -386,6 +391,17 @@ def showLimbs(frame, results):
 #----------------------------------------------------------#
 
 
+#--FUNCTIONS FOR STUFF DISPLAYED ON SCREEN BY OPENCV--#
+
+def checkSetupPassed():
+    global hasPassedSetupTime
+    if time.time() - programStartTime >= setupTime:
+        hasPassedSetupTime = True
+        print("squat analysis started")
+
+#-----------------------------------------------------#
+
+
 #--MAIN FUNCTION--#
 
 def main():
@@ -424,9 +440,13 @@ def main():
                                         for lmk in pose_landmarks.landmark], dtype=np.float32)
             assert pose_landmarks.shape == (33, 3), 'Unexpected landmarks shape: {}'.format(pose_landmarks.shape)
         
-        #Run entire squat analysis if landmarks array has proper shape
+        #check if setup time has finished and the squat analysis can begin
+        if not hasPassedSetupTime:
+            checkSetupPassed()
+
+        #Run entire squat analysis if landmarks array has proper shape and if setup time passed
         landmarks = np.copy(pose_landmarks)
-        if landmarks.shape == (33, 3):
+        if landmarks.shape == (33, 3) and hasPassedSetupTime:
             squatAnalysis(landmarks, frame, repIssues)
         
         #display correct and incorrect rep counters
