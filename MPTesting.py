@@ -9,7 +9,7 @@ from collections import deque
 
 #Variables for MediaPipe Holistic ML model + limb drawing tools
 drawLimbs = mp.solutions.drawing_utils
-mp_drawing_styles = mp.solutions.drawing_styles
+#mp_drawing_styles = mp.solutions.drawing_styles
 mp_holistic = mp.solutions.holistic
 model = mp_holistic.Holistic(min_detection_confidence=0.5,
                             min_tracking_confidence=0.5)
