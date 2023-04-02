@@ -410,6 +410,7 @@ def main():
     #initialize CV2 Video input and output
     camera_id = "/dev/video0"
     cam = cv2.VideoCapture(camera_id, cv2.CAP_V4L2)
+    cam.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
     windowName = "Camera View"
     cv2.namedWindow(windowName, cv2.WINDOW_NORMAL)
     
