@@ -408,7 +408,8 @@ def main():
     #globals
 
     #initialize CV2 Video input and output
-    cam = cv2.VideoCapture(0)
+    camera_id = "/dev/video0"
+    cam = cv2.VideoCapture(camera_id, cv2.CAP_V4L2)
     windowName = "Camera View"
     cv2.namedWindow(windowName, cv2.WINDOW_NORMAL)
     
