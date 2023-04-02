@@ -410,9 +410,9 @@ def main():
     #initialize CV2 Video input and output
     camera_id = "/dev/video0"
     cam = cv2.VideoCapture(camera_id, cv2.CAP_V4L2)
-    cv2.waitKey(100)
+    #cv2.waitKey(100)
     windowName = "Camera View"
-    cv2.namedWindow(windowName, cv2.WINDOW_NORMAL)
+    cv2.namedWindow(windowName, cv2.WINDOW_AUTOSIZE)
     
     #initialize important squat analysis non-global variables
     repIssues = [] #list to hold all issues during a rep, prints after the rep
