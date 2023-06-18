@@ -403,17 +403,17 @@ def checkSetupPassed():
 
 
 #--MAIN FUNCTION--#
-
-def main():
+if __name__ == "__main__":
     #globals
 
     #initialize CV2 Video input and output
     camera_id = "/dev/video0"
-    cam = cv2.VideoCapture(camera_id, cv2.CAP_V4L2)
-    #cv2.waitKey(100)
+    # cam = cv2.VideoCapture(camera_id, cv2.CAP_V4L2)
+    cam = cv2.VideoCapture(0)
+
+    cv2.waitKey(100)
     windowName = "Camera View"
-    cv2.namedWindow(windowName, cv2.WINDOW_AUTOSIZE)
-    
+    cv2.namedWindow(windowName, cv2.WINDOW_NORMAL)
     #initialize important squat analysis non-global variables
     repIssues = [] #list to hold all issues during a rep, prints after the rep
 
@@ -421,8 +421,7 @@ def main():
     while cv2.waitKey(1) != 27:
         has_frame, frame = cam.read()
         if has_frame != True:
-            break
-
+            print("no has_frame")
         frame.flags.writeable = False
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
@@ -470,5 +469,3 @@ def main():
     cv2.destroyWindow(windowName)
 
 #-----------------#
-
-main()
