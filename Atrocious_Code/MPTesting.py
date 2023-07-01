@@ -4,6 +4,7 @@ import mediapipe as mp
 import cv2
 import time
 from collections import deque
+from config import squat_variables
 
 #--GLOBAL VARIABLES--#
 
@@ -102,10 +103,7 @@ def resetVariables(repIssues):
 
     #reset queue and variables used to determine when we start ascending. 
     ascentQ.clear()
-    ascentQ.append(0) 
-    ascentQ.append(0)
-    ascentQ.append(0)
-    ascentQ.append(0)
+    ascentQ.extend((0, 0, 0, 0)) 
     ascentQTotal = 0 #hold total of ascent queue, once equal to 3 we know ascent started
 
     #reset issue added booleans
@@ -468,4 +466,4 @@ if __name__ == "__main__":
     cam.release()
     cv2.destroyWindow(windowName)
 
-#-----------------#
+# -----------------#
