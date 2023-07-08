@@ -2,12 +2,22 @@ import numpy as np
 import math as math
 import mediapipe as mp
 import cv2
+import logging
+import time
+import os
 
 from Utils.config import squat_vars
 from Utils.display import checkSetupPassed, showLimbs, displayCounters
+from Utils.logger_config import Logger
 from Analysis_Functions.mainSquat import squatAnalysis
 
 if __name__ == "__main__":
+    curr_datetime = time.strftime("%d-%m-%Y %H_%M_%S")
+    path_log = os.path.join(os.getcwd(), "Logger_Scripts", curr_datetime + ".log")
+    logger = Logger(path_log)
+    logger.setup().setLevel(logging.INFO)
+    logger.setup().info("Starting")
+    
     #initialize CV2 Video input and output
     # camera_id = "/dev/video0"
     # cam = cv2.VideoCapture(camera_id, cv2.CAP_V4L2)
