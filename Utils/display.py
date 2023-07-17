@@ -1,8 +1,10 @@
 #--FUNCTIONS FOR STUFF DISPLAYED ON SCREEN BY OPENCV--#
 from Utils.config import squat_vars
+from Utils.logger_config import Logger
 
 import cv2
 import time
+
 
 #function to display correct and incorrect rep counters
 def displayCounters(frame):
@@ -26,6 +28,7 @@ def showLimbs(frame, results):
     )
 
 def checkSetupPassed():
+    logger = Logger()   
     if time.time() - squat_vars.programStartTime >= squat_vars.setupTime:
         squat_vars.hasPassedSetupTime = True
-        print("squat analysis started")
+        logger.setup().info("Squat Analysis started")

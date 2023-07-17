@@ -12,9 +12,11 @@ from Utils.logger_config import Logger
 from Analysis_Functions.mainSquat import squatAnalysis
 
 if __name__ == "__main__":
-    curr_datetime = time.strftime("%d-%m-%Y %H_%M_%S")
-    path_log = os.path.join(os.getcwd(), "Logger_Scripts", curr_datetime + ".log")
+    # curr_datetime = time.strftime("%d-%m-%Y %H_%M_%S")
+    # path_log = os.path.join(os.getcwd(), "Logger_Scripts", curr_datetime + ".log")
+    path_log = os.path.join(os.getcwd(), "Logger_Scripts", "basic.log")
     logger = Logger(path_log)
+
     logger.setup().setLevel(logging.INFO)
     logger.setup().info("Starting")
     
@@ -27,10 +29,15 @@ if __name__ == "__main__":
     windowName = "Camera View"
     cv2.namedWindow(windowName, cv2.WINDOW_NORMAL)
     #Main while loop to process frames using OpenCV and Mediapipe
-    while cv2.waitKey(1) != 27:
-        has_frame, frame = cam.read()
-        if has_frame != True:
-            print("no has_frame")
+    while cv2.waitKey(1) != 27: #esc key
+        success, frame = cam.read()
+        if success != True:
+            logger.setup().setLevel(logging.ERROR)
+            logger.setup().error("No frame detected")
+            continue
+
+        logger.setup().setLevel(logging.ERROR)
+
         frame.flags.writeable = False
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
@@ -44,11 +51,14 @@ if __name__ == "__main__":
         pose_landmarks = results.pose_landmarks
 
         # Get landmarks into np array
-        if pose_landmarks is not None:
+        try:
             frame_height, frame_width = frame.shape[0], frame.shape[1]
             pose_landmarks = np.array([[lmk.x * frame_width, lmk.y * frame_height, lmk.z * frame_width]
                                         for lmk in pose_landmarks.landmark], dtype=np.float32)
             assert pose_landmarks.shape == (33, 3), 'Unexpected landmarks shape: {}'.format(pose_landmarks.shape)
+        except:
+            logger.setup().info("No object detected")
+            continue
         
         #check if setup time has finished and the squat analysis can begin
         if not squat_vars.hasPassedSetupTime:
@@ -56,6 +66,7 @@ if __name__ == "__main__":
 
         #Run entire squat analysis if landmarks array has proper shape and if setup time passed
         landmarks = np.copy(pose_landmarks)
+        print(landmarks)
         if landmarks.shape == (33, 3) and squat_vars.hasPassedSetupTime:
             squatAnalysis(landmarks, frame)
         
