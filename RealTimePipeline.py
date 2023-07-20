@@ -9,13 +9,13 @@ import os
 from Utils.config import squat_vars
 from Utils.display import checkSetupPassed, showLimbs, displayCounters
 from Utils.logger_config import Logger
-from Analysis_Functions_RT.mainSquat import squatAnalysis
+from Analysis_Functions.mainSquat import squatAnalysis
 
 if __name__ == "__main__":
     # curr_datetime = time.strftime("%d-%m-%Y %H_%M_%S")
     # path_log = os.path.join(os.getcwd(), "Logger_Scripts", curr_datetime + ".log")
     path_log = os.path.join(os.getcwd(), "Logger_Scripts", "basic.log")
-    logger = Logger(path_log)
+    logger = Logger()
 
     logger.setup().setLevel(logging.INFO)
     logger.setup().info("Starting")

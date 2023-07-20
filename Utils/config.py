@@ -9,7 +9,8 @@ class create_all_squat_variables:
         self.drawLimbs = mp.solutions.drawing_utils
         self.mp_holistic = mp.solutions.holistic
         self.model = self.mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5)
-        
+        self.mp_pose = mp.solutions.pose
+
         #landmark vars
         self.landmark_names = [
         'nose',
@@ -76,3 +77,4 @@ class create_all_squat_variables:
 
 
 squat_vars = create_all_squat_variables()
+squat_vars_pp = create_all_squat_variables()

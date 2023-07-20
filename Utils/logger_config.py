@@ -17,14 +17,15 @@ class SingleInstanceMetaClass(type):
 
 
 class Logger(metaclass=SingleInstanceMetaClass):
-    def __init__(self, name, state=False, file=True, format_str="%(asctime)s [%(pathname)s:%(lineno)s - %(levelname)s ] %(message)s",
+    def __init__(self, name=None, file=False, format_str="%(asctime)s [%(pathname)s:%(lineno)s - %(levelname)s ] %(message)s",
                date_format='%Y-%m-%d %H:%M:%S'):
         self.name = name
-        self.state = state
         self.file = file
         self.format_str = format_str
         self.date_format = date_format
         self.handler = logging.FileHandler(self.name) if self.file else logging.StreamHandler()
+        if name is not None and file:
+            self.handler2 = logging.StreamHandler()
 
     def setup(self):
         logger = logging.getLogger(self.name)
@@ -32,5 +33,10 @@ class Logger(metaclass=SingleInstanceMetaClass):
         formatter = logging.Formatter(fmt=self.format_str, datefmt=self.date_format)
         self.handler.setFormatter(formatter)
         logger.addHandler(self.handler)
+        if self.name is not None and self.file:
+            self.handler2.setLevel(logging.INFO)
+            formatter = logging.Formatter(fmt=self.format_str, datefmt=self.date_format)
+            self.handler.setFormatter(formatter)
+            logger.addHandler(self.handler2)
         return logger
 
