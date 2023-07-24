@@ -77,4 +77,4 @@ def squatStateTransitions(angleUpperLeg, frame):
             print("hi")
 
     #Show current squat state on screen
-    cv2.putText(frame, squat_vars.currentSquatStateText, (20, 60), cv2.FONT_HERSHEY_SIMPLEX, 2, (223, 244, 16), 6, cv2.LINE_AA)
+    cv2.putText(frame, squat_vars.currentSquatStateText, (20, 60), cv2.FONT_HERSHEY_SIMPLEX, 2, (223, 244, 16), 6, cv2.LINE_AA) #(223, 244, 16)

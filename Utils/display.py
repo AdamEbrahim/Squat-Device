@@ -8,8 +8,8 @@ import time
 
 #function to display correct and incorrect rep counters
 def displayCounters(frame):
-    cv2.putText(frame, "Complete reps: " + str(squat_vars.repCounter), (700, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (223, 244, 16), 6, cv2.LINE_AA)
-    cv2.putText(frame, "Incomplete reps: " + str(squat_vars.incompleteCounter), (700, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (223, 244, 16), 6, cv2.LINE_AA)
+    cv2.putText(frame, "Complete reps: " + str(squat_vars.repCounter), (500, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (223, 244, 16), 6, cv2.LINE_AA) #(223, 244, 16)
+    cv2.putText(frame, "Incomplete reps: " + str(squat_vars.incompleteCounter), (500, 80), cv2.FONT_HERSHEY_SIMPLEX, 1, (223, 244, 16), 6, cv2.LINE_AA)
 
 #function to display mediapipe pose estimation limbs
 def showLimbs(frame, results):

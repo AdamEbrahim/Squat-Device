@@ -71,7 +71,7 @@ def squat_post_process(file_path, name, view=False):
     print("Complete")
 
     analysis_file = os.path.join(os.path.join(os.getcwd(), "Results_PP"), str(name) + "_results.txt")
-    file_writer(analysis_file, file_path, name, start_time)
+    file_writer(analysis_file, start_time, name, file_path)
 
 file_path = r"/Users/dcunhrya/Movies/ekans_squat_side.mp4"
-squat_post_process(file_path, 'ekans')
+squat_post_process(file_path, 'ekans', view = True)

@@ -1,6 +1,6 @@
 File Path: /Users/dcunhrya/Movies/ekans_squat_side.mp4
-Squat Analysis ekans
+Squat Analysis: ekans
 Total Reps Attempted: 3
 Completed Reps: 3
 Incomplete Reps: 0
-Time to process: 7.25s
+Time to process: 10.72s

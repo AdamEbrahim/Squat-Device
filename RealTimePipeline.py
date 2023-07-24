@@ -10,6 +10,7 @@ from Utils.config import squat_vars
 from Utils.display import checkSetupPassed, showLimbs, displayCounters
 from Utils.logger_config import Logger
 from Analysis_Functions.mainSquat import squatAnalysis
+from Utils.file_output import file_writer
 
 if __name__ == "__main__":
     # curr_datetime = time.strftime("%d-%m-%Y %H_%M_%S")
@@ -19,6 +20,7 @@ if __name__ == "__main__":
 
     logger.setup().setLevel(logging.INFO)
     logger.setup().info("Starting")
+    start_time = time.time()
     
     #initialize CV2 Video input and output
     # camera_id = "/dev/video0"
@@ -80,3 +82,12 @@ if __name__ == "__main__":
     #after user presses escape end the output video feed
     cam.release()
     cv2.destroyWindow(windowName)
+
+    if not os.path.exists(os.path.join(os.getcwd(), "Results_RT")): os.mkdir(os.path.join(os.getcwd(), "Results_RT"))
+
+    vid_counter = 0
+    analysis_file = os.path.join(os.path.join(os.getcwd(), "Results_RT"), "results_" + str(vid_counter) + ".txt")
+    while os.path.exists(analysis_file):
+        analysis_file = os.path.join(os.path.join(os.getcwd(), "Results_RT"), "results_" + str(vid_counter) + ".txt")
+        vid_counter += 1
+    file_writer(analysis_file, start_time, vid_counter)
