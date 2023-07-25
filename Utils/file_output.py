@@ -15,4 +15,8 @@ def file_writer(analysis_file, start_time, name, file_path=None, ):
                 f.write("Time to process: " + str(round(time.time() - start_time, 2)) + "s" + "\n")
             else:
                 f.write("Total time: " + str(round(time.time() - start_time, 2)) + "s" + "\n")
-        f.close()
+            f.write("\n")
+
+            for i in range(len(squat_vars.overallIssues)):
+                 for j in range(len(squat_vars.overallIssues[i])):
+                      f.write(squat_vars.overallIssues[i][j] + "\n")

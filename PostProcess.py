@@ -74,4 +74,5 @@ def squat_post_process(file_path, name, view=False):
     file_writer(analysis_file, start_time, name, file_path)
 
 file_path = r"/Users/dcunhrya/Movies/ekans_squat_side.mp4"
-squat_post_process(file_path, 'ekans', view = True)
+name = file_path.split('/')[-1].split('.')[0]
+squat_post_process(file_path, name, view = True)

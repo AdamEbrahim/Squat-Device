@@ -22,28 +22,46 @@ def resetVariables():
 
 #print summary of squat after each rep
 def squatSummary():
+    issue_per_rep = []
     if squat_vars.goodRep:
-        print("Summary of Rep #" + str(squat_vars.repCounter + squat_vars.incompleteCounter) + " (Complete Rep):")
+        complete = "Summary of Rep #" + str(squat_vars.repCounter + squat_vars.incompleteCounter) + " (Complete Rep):"
+        issue_per_rep.append(complete)
+        print(complete)
     else:
-        print("Summary of Rep #" + str(squat_vars.repCounter + squat_vars.incompleteCounter) + " (Incomplete rep):")
+        incomplete = "Summary of Rep #" + str(squat_vars.repCounter + squat_vars.incompleteCounter) + " (Incomplete rep):"
+        issue_per_rep.append(incomplete)
+        print(incomplete)
 
     #print ascent time only if start and end time calculated
     if squat_vars.hasCalculatedAscentEnd and squat_vars.hasCalculatedAscentStart:
-        print("    Time to ascend: " + str(squat_vars.endAscentTime - squat_vars.startAscentTime) + " seconds")
+        ascend = "    Time to ascend: " + str(round(squat_vars.endAscentTime - squat_vars.startAscentTime, 2)) + " seconds"
+        issue_per_rep.append(ascend)
+        print(ascend)
 
     #print time at bottom only if start and end time calculated
     if squat_vars.hasCalculatedBottomStart and squat_vars.hasCalculatedBottomEnd:
-        print("    Time at bottom: " + str(squat_vars.endBottomTime - squat_vars.startBottomTime) + " seconds")
+        bottom = "    Time at bottom: " + str(round(squat_vars.endBottomTime - squat_vars.startBottomTime, 2)) + " seconds"
+        issue_per_rep.append
+        print(bottom)
 
     #if user wanted to hold bottom position, print whether successful or not
     if squat_vars.bottomHolds:
         if squat_vars.hasCompletedBottomHold:
-            print("    Successfully held bottom position for " + str(squat_vars.bottomHoldTime) + " seconds")
+            bottomHold = "    Successfully held bottom position for " + str(round(squat_vars.bottomHoldTime, 2)) + " seconds"
+            issue_per_rep.append(bottomHold)
+            print(bottomHold)
         else:
-            print("    Failed to hold bottom position for " + str(squat_vars.bottomHoldTime) + " seconds")
+            failBotHold = "    Failed to hold bottom position for " + str(round(squat_vars.bottomHoldTime, 2)) + " seconds"
+            issue_per_rep.append(failBotHold)
+            print(failBotHold)
 
     print("    Issues:")
-    for i in range(len(squat_vars.repIssues)):
-        print("      " + "Issue #" + str(i+1) + ": " + squat_vars.repIssues[i])
+    issue_per_rep.append("    Issues:")
 
+    for i in range(len(squat_vars.repIssues)):
+        issue = "      " + "Issue #" + str(i+1) + ": " + squat_vars.repIssues[i]
+        issue_per_rep.append(issue)
+        print(issue)
+
+    squat_vars.overallIssues.append(issue_per_rep)
     resetVariables()
