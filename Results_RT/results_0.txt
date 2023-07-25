@@ -1,0 +1,6 @@
+Real Time Processing: 
+Squat Analysis: 0
+Total Reps Attempted: 62
+Completed Reps: 0
+Incomplete Reps: 62
+Total time: 18.85s

@@ -33,7 +33,7 @@ def upperLegAnalysis(landmarks, frame):
     if landmarks[squat_vars.rightHipIndex].shape == (3,) and landmarks[squat_vars.rightKneeIndex].shape == (3,):
         yDistUpperLeg = landmarks[squat_vars.rightHipIndex][1] - landmarks[squat_vars.rightKneeIndex][1]
         xDistUpperLeg = landmarks[squat_vars.rightHipIndex][0] - landmarks[squat_vars.rightKneeIndex][0]
-        angleUpperLeg = round(m.degrees(m.atan(yDistUpperLeg/xDistUpperLeg)))
+        angleUpperLeg = abs(round(m.degrees(m.atan(yDistUpperLeg/xDistUpperLeg))))
 
         kneePos = np.array([landmarks[squat_vars.rightKneeIndex][0], landmarks[squat_vars.rightKneeIndex][1]])
         kneeHorizontalLineEnd = np.array([landmarks[squat_vars.rightKneeIndex][0] + 150, landmarks[squat_vars.rightKneeIndex][1]])
