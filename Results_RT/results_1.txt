@@ -1,0 +1,44 @@
+Real Time Processing: 
+Squat Analysis: 2
+Total Reps Attempted: 8
+Completed Reps: 4
+Incomplete Reps: 4
+Total time: 43.62s
+
+Summary of Rep #1 (Incomplete rep):
+    Failed to hold bottom position for 2 seconds
+    Issues:
+      Issue #1: Improper depth
+Summary of Rep #2 (Complete Rep):
+    Time to ascend: 15.62 seconds
+    Failed to hold bottom position for 2 seconds
+    Issues:
+      Issue #1: Excessive forward lean
+Summary of Rep #3 (Complete Rep):
+    Time to ascend: 17.6 seconds
+    Failed to hold bottom position for 2 seconds
+    Issues:
+Summary of Rep #4 (Complete Rep):
+    Time to ascend: 18.33 seconds
+    Failed to hold bottom position for 2 seconds
+    Issues:
+Summary of Rep #5 (Complete Rep):
+    Time to ascend: 28.5 seconds
+    Failed to hold bottom position for 2 seconds
+    Issues:
+      Issue #1: Excessive forward lean
+Summary of Rep #6 (Incomplete rep):
+    Time to ascend: 31.94 seconds
+    Failed to hold bottom position for 2 seconds
+    Issues:
+      Issue #1: Improper depth
+Summary of Rep #7 (Incomplete rep):
+    Time to ascend: 37.64 seconds
+    Failed to hold bottom position for 2 seconds
+    Issues:
+      Issue #1: Improper depth
+Summary of Rep #8 (Incomplete rep):
+    Time to ascend: 38.51 seconds
+    Failed to hold bottom position for 2 seconds
+    Issues:
+      Issue #1: Improper depth

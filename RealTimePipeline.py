@@ -5,6 +5,7 @@ import cv2
 import logging
 import time
 import os
+from datetime import datetime
 
 from Utils.config import squat_vars
 from Utils.display import checkSetupPassed, showLimbs, displayCounters
@@ -13,6 +14,7 @@ from Analysis_Functions.mainSquat import squatAnalysis
 from Utils.file_output import file_writer
 
 if __name__ == "__main__":
+    date_time = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     # curr_datetime = time.strftime("%d-%m-%Y %H_%M_%S")
     # path_log = os.path.join(os.getcwd(), "Logger_Scripts", curr_datetime + ".log")
     path_log = os.path.join(os.getcwd(), "Logger_Scripts", "basic.log")
@@ -90,4 +92,5 @@ if __name__ == "__main__":
     while os.path.exists(analysis_file):
         analysis_file = os.path.join(os.path.join(os.getcwd(), "Results_RT"), "results_" + str(vid_counter) + ".txt")
         vid_counter += 1
-    file_writer(analysis_file, start_time, vid_counter)
+    file_writer(analysis_file, start_time, vid_counter, date=date_time)
+    

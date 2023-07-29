@@ -9,7 +9,7 @@ def checkForAscent(rightHipHeight):
         squat_vars.ascentQ.append(1)
         squat_vars.ascentQTotal = squat_vars.ascentQTotal - squat_vars.ascentQ.popleft() + 1 #maintain queue total
         if squat_vars.ascentQTotal == 3:
-            startAscentTime = time.time()
+            squat_vars.startAscentTime = time.time()
             squat_vars.hasCalculatedAscentStart = True
         else:
             squat_vars.prevHipHeight = rightHipHeight
