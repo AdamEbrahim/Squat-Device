@@ -1,7 +1,0 @@
-Real Time Processing: 07/29/2023, 11:45:55
-Squat Analysis: 6
-Total Reps Attempted: 0
-Completed Reps: 0
-Incomplete Reps: 0
-Total time: 5.16s
-
