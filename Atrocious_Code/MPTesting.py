@@ -4,7 +4,6 @@ import mediapipe as mp
 import cv2
 import time
 from collections import deque
-from config import squat_variables
 
 #--GLOBAL VARIABLES--#
 
@@ -406,20 +405,24 @@ if __name__ == "__main__":
 
     #initialize CV2 Video input and output
     camera_id = "/dev/video0"
-    # cam = cv2.VideoCapture(camera_id, cv2.CAP_V4L2)
-    cam = cv2.VideoCapture(0)
+    cam = cv2.VideoCapture(camera_id, cv2.CAP_V4L2)
+    #cam = cv2.VideoCapture(0)
 
     cv2.waitKey(100)
     windowName = "Camera View"
     cv2.namedWindow(windowName, cv2.WINDOW_NORMAL)
     #initialize important squat analysis non-global variables
     repIssues = [] #list to hold all issues during a rep, prints after the rep
+    counterTest = 0
 
     #Main while loop to process frames using OpenCV and Mediapipe
     while cv2.waitKey(1) != 27:
         has_frame, frame = cam.read()
         if has_frame != True:
             print("no has_frame")
+
+        counterTest = counterTest + 1
+        print(counterTest)
         frame.flags.writeable = False
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
