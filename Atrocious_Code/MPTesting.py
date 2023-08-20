@@ -421,6 +421,7 @@ if __name__ == "__main__":
         if has_frame != True:
             print("no has_frame")
 
+        cv2.imshow(windowName, frame)
         counterTest = counterTest + 1
         print(counterTest)
         frame.flags.writeable = False
