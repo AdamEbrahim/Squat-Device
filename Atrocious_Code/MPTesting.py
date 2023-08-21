@@ -407,7 +407,8 @@ if __name__ == "__main__":
     #initialize CV2 Video input and output
     camera_id = "/dev/video0"
     #cam = cv2.VideoCapture(camera_id, cv2.CAP_V4L2)
-    cam = cv2.VideoCapture(0)
+    cam = cv2.VideoCapture('nvarguscamerasrc ! video/x-raw(memory:NVMM), width=3280, height=2464, format=(string)NV12, framerate=(fraction)20/1 ! nvvidconv ! video/x-raw, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink' , cv2.CAP_GSTREAMER)
+    #cam = cv2.VideoCapture(0)
 
     cv2.waitKey(100)
     windowName = "Camera View"
